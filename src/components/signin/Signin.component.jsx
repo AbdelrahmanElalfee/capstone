@@ -3,9 +3,10 @@ import {
     signInWithGooglePopup,
     signInUserWithEmailAndPassword
 } from "../../utils/firebase/firebase.utils.js";
-import {useState} from "react";
+import { useState, useContext } from "react";
 import FormInput from "../form-input/FormInput.components.jsx";
 import Button from "../button/Button.component.jsx";
+import { UserContext } from "../../context/user.context.jsx";
 
 import './Signin.style.scss';
 
@@ -16,13 +17,13 @@ const fields = {
 
 const Signin = () => {
 
-    const logGoogleUser = async () => {
-        const { user} = await signInWithGooglePopup();
-        const userDocRef = await createUserDocumentFromAuth(user);
-    }
-
     const [formFields, setFormFields] = useState(fields);
     const { email, password} = formFields;
+    const { setCurrentUser } = useContext(UserContext);
+
+    const logGoogleUser = async () => {
+        await signInWithGooglePopup();
+    }
 
     const resetFields = () => {
         setFormFields(fields);
@@ -36,10 +37,20 @@ const Signin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await signInUserWithEmailAndPassword(email, password);
+            const {user} = await signInUserWithEmailAndPassword(email, password);
             resetFields();
+            setCurrentUser(user);
         }catch (error){
-            console.log(error);
+            switch (error.code) {
+                case 'auth/wrong-password':
+                    alert('incorrect password for email');
+                    break;
+                case 'auth/user-not-found':
+                    alert('no user associated with this email');
+                    break;
+                default:
+                    console.log(error);
+            }
         }
     }
     return (

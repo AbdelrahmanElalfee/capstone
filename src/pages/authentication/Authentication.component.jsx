@@ -7,7 +7,7 @@ import Signin from "../../components/signin/Signin.component.jsx";
 const AuthenticationPage = () => {
     return (
         <div className='authentication-container'>
-            {/*<Outlet/>*/}
+            <Outlet/>
             <Signin />
             <Signup />
         </div>
