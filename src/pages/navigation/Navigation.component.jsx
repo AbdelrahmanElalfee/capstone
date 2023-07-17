@@ -27,9 +27,6 @@ const Navigation = () => {
                     <Link className='nav-link' to='/shop'>
                         SHOP
                     </Link>
-                    <Link className='nav-link' to='/contact'>
-                        CONTACT
-                    </Link>
                     {currentUser === null ? (
                         <Link className='nav-link' to='/auth'>
                             SIGN IN
