@@ -1,19 +1,14 @@
-import { initializeApp } from "firebase/app";
+import {initializeApp} from "firebase/app";
 import {
-    getAuth,
-    signInWithPopup,
-    GoogleAuthProvider,
     createUserWithEmailAndPassword,
+    getAuth,
+    GoogleAuthProvider,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
+    signInWithPopup,
     signOut,
-    onAuthStateChanged
 } from "firebase/auth";
-import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc
-} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, getFirestore, setDoc, writeBatch, query} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBvWge1II-JL_SugFEMtdASg8dGaot0kVY",
@@ -35,6 +30,30 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 export const db = getFirestore();
+
+export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    });
+
+    await batch.commit();
+}
+
+export const getCollectionAndDocument = async (collectionKey = 'categories') => {
+    const collectionRef = collection(db, collectionKey);
+    const q = query(collectionRef);
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const {title, items} = docSnapshot.data();
+        acc[title.toLowerCase()] = items;
+        return acc;
+    }, {});
+}
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
     if (!userAuth) return;
@@ -73,11 +92,3 @@ export const signInUserWithEmailAndPassword = async (email, password) => {
 export const SignOutUser = () => signOut(auth);
 
 export const OnAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
-
-/**
- * {
- *     next: callback,
- *     error: errorCallback,
- *     complete: completeCallback
- * }
- */
