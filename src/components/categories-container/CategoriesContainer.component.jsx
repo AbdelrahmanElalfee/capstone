@@ -1,10 +1,13 @@
 import CategoryContainer from "../category-container/CategoryContainer.component.jsx";
 import './CategoriesContainer.style.scss';
-const CategoriesContainer = ({categories}) => {
+import {categories} from "../../../constants.js";
+
+const CategoriesContainer = () => {
+
     return (
         <div className="categories-container">
-            {categories.map(({title, img, id}) => (
-                <CategoryContainer key={id} title={title} img={img}/>
+            {categories.map((category) => (
+                <CategoryContainer key={category.id} category={category}/>
             ))}
         </div>
     )
