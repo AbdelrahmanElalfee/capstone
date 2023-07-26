@@ -10,7 +10,6 @@ const Home = () => {
         <div>
             <Outlet />
             <CategoriesContainer />
-            <Categories/>
         </div>
     )
 }
