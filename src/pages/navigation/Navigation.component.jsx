@@ -1,17 +1,17 @@
-import {Link, Outlet} from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useContext, Fragment } from "react";
-import { UserContext } from '../../context/user.context.jsx';
+import { useSelector } from "react-redux";
+// import { UserContext } from '../../context/user.context.jsx';
 import { CartContext } from '../../context/cart.context.jsx';
 import './Navigation.style.scss'
-import {SignOutUser} from "../../utils/firebase/firebase.utils.js";
+import { SignOutUser } from "../../utils/firebase/firebase.utils.js";
 import CartIcon from "../../components/cart-icon/CartIcon.component.jsx";
 import CrwnLogo from '../../assets/crown.svg';
 import CartDropdown from "../../components/cart-dropdown/CartDropdown.component.jsx";
 
 
 const Navigation = () => {
-
-    const { currentUser} = useContext(UserContext);
+    const currentUser = useSelector((state) => state.user.currentUser);
     const { isCartOpen } = useContext(CartContext);
 
     return (
@@ -36,9 +36,9 @@ const Navigation = () => {
                             <span className='nav-link' onClick={SignOutUser}>
                                 SIGN OUT
                             </span>
-                            <CartIcon />
                         </>
                     )}
+                    <CartIcon />
                 </div>
                 { isCartOpen && <CartDropdown/> }
             </div>

@@ -3,12 +3,23 @@ import { useContext } from 'react';
 import { CartContext } from "../../context/cart.context.jsx";
 import CheckoutItem from "../../components/checkout-item/CheckoutItem.component.jsx";
 import Button from "../../components/button/Button.component.jsx";
+import {UserContext} from "../../context/user.context.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Checkout = () => {
 
     const { cartItems, cartTotal, emptyCart } = useContext(CartContext);
+    const {currentUser} = useContext(UserContext);
+    const navigate = new useNavigate();
 
-    const clickHandler = () => emptyCart();
+    const clickHandler = () => {
+        if (!currentUser){
+            navigate('/auth');
+            return;
+        }
+
+        emptyCart();
+    };
 
     return (
         <div className='checkout-container'>

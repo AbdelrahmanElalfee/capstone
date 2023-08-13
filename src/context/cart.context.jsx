@@ -1,4 +1,4 @@
-import {createContext, useState, useEffect, useReducer} from 'react';
+import {createContext, useReducer} from 'react';
 
 export const addCartItem = (cartItems, productToAdd) => {
     const existingCartItem = cartItems.find(
@@ -51,21 +51,18 @@ const INITIAL_VALUES = {
     cartTotal: 0
 }
 
-const ACTION_TYPES = {
-    'SET_CART_ITEMS': 'SET_CART_ITEMS',
-    'SET_IS_CART_OPEN': 'SET_IS_CART_OPEN'
-}
+
 
 const cartReducer = (state, action) => {
     const {type, payload} = action;
 
     switch (type) {
-        case ACTION_TYPES.SET_CART_ITEMS:
+        case CART_ACTION_TYPES.SET_CART_ITEMS:
             return {
                 ...state,
                 ...payload
             }
-        case ACTION_TYPES.SET_IS_CART_OPEN:
+        case CART_ACTION_TYPES.SET_IS_CART_OPEN:
             return {
                 ...state,
                 isCartOpen: payload
@@ -77,7 +74,7 @@ const cartReducer = (state, action) => {
 
 export const CartContext = createContext({
     isCartOpen: false,
-    setIsOpen: () => {},
+    setIsCartOpen: () => {},
     cartItems: [],
     addItemToCart: () => {},
     cartItemCount: 0,
@@ -101,7 +98,11 @@ export const CartProvider = ({ children }) => {
             0
         );
 
-        dispatch({type: ACTION_TYPES.SET_CART_ITEMS, payload: {cartItems: newCartItems, cartTotal: newCartTotal, cartItemCount: count}});
+        dispatch({type: CART_ACTION_TYPES.SET_CART_ITEMS, payload: {
+                cartItems: newCartItems,
+                cartTotal: newCartTotal,
+                cartItemCount: count
+            }});
     }
 
     const addItemToCart = (product) => {
@@ -123,7 +124,7 @@ export const CartProvider = ({ children }) => {
     }
 
     const setIsCartOpen = (bool) => {
-        dispatch({type: ACTION_TYPES.SET_IS_CART_OPEN, payload: bool})
+        dispatch({type: CART_ACTION_TYPES.SET_IS_CART_OPEN, payload: bool});
     }
 
     const value = {

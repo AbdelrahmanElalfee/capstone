@@ -1,3 +1,22 @@
+export const USER_ACTION_TYPES = {SET_CURRENT_USER: 'SET_CURRENT_USER'};
+
+export const USER_INITIAL_STATE = {
+    currentUser: null,
+};
+
+export const CART_ACTION_TYPES = {
+    SET_CART_ITEMS: 'SET_CART_ITEMS',
+    SET_IS_CART_OPEN: 'SET_IS_CART_OPEN'
+};
+
+export const CART_INITIAL_STATE = {
+    isCartOpen: false,
+    cartItems: [],
+    cartItemCount: 0,
+    cartTotal: 0
+}
+
+
 export const categories = [
     {
         id: 1,
